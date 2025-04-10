@@ -1,6 +1,4 @@
-flask
-pandas
+fastapi
+uvicorn
 xgboost
-scikit-learn
-joblib
-gunicorn
+numpy
