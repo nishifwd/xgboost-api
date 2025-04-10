@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 
 app = Flask(__name__)
-model = joblib.load("XGBBoost.pkl")
+model = joblib.load("XGBoost.pkl")
 
 @app.route("/")
 def home():
