@@ -1,15 +1,13 @@
 from flask import Flask, request, jsonify
 import xgboost as xgb
 import pandas as pd
-import json
 
 app = Flask(__name__)
 
 # Load the trained XGBoost model
 model = xgb.Booster()
-model.load_model("XGBoost.json")  # Use your actual model file name here
+model.load_model("XGBoost.json")
 
-# Your feature list (make sure the order is exactly as used during training)
 FEATURES = [
     "Alkalinity-total (as CaCO3)",
     "Ammonia-Total (as N)",
@@ -37,8 +35,8 @@ def predict():
         return jsonify({"error": "Missing features"}), 400
 
     try:
-        # Make sure data is in the correct feature order
-        df = pd.DataFrame([features])[FEATURES]
+        # Fixed DataFrame creation
+        df = pd.DataFrame([features], columns=FEATURES)
         dmatrix = xgb.DMatrix(df)
         prediction = model.predict(dmatrix)[0]
         return jsonify({"prediction": float(prediction)})
