@@ -1,21 +1,23 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from flask import Flask, request, jsonify
 import xgboost as xgb
 import numpy as np
 
-app = FastAPI()
+app = Flask(__name__)
 
 # Load the model from JSON
 model = xgb.Booster()
 model.load_model("XGBoost.json")
 
-# Define input schema
-class Features(BaseModel):
-    features: dict
-
-@app.post("/predict")
-async def predict(data: Features):
-    input_array = np.array([list(data.features.values())])
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.get_json()
+    features = data.get("features", {})
+    # Convert the features dictionary values to a numpy array
+    input_array = np.array([list(features.values())])
+    # Create DMatrix for XGBoost
     dmatrix = xgb.DMatrix(input_array)
+    # Get prediction
     prediction = model.predict(dmatrix)
-    return {"prediction": float(prediction[0])}
+    return jsonify({"prediction": float(prediction[0])})
+if __name__ == "__main__":
+    app.run(debug=True)
