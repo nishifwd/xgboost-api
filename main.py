@@ -7,7 +7,7 @@ app = FastAPI()
 
 # Load the model from JSON
 model = xgb.Booster()
-model.load_model("xgb_model.json")
+model.load_model("XGBoost.json")
 
 # Define input schema
 class Features(BaseModel):
